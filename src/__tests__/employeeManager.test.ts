@@ -36,29 +36,41 @@ describe("Employee Manager", () => {
       id: 1,
       name: "Bernice Ortiz",
       phone: "4824931093",
-      title: "Grand poobab",
+      title: "Grand Poobah",
     });
 
   });
   
-    it("can edit an existing employee Teresa", async () => {
+  it("can canel exiting edited employee", async () => {
+    await em.selectEmployeeByName("Teresa Osborne");
+    await em.editEmployee({ title: "Manager" });
+    await em.cancelChanges();
+    await em.selectEmployeeByName("Phillip Weaver");
+    await em.selectEmployeeByName("Teresa Osborne");
+    let employee = await em.getEmployeeInfo();
+    expect(employee).toEqual({
+      id: 4,
+      name: "Teresa Osborne",
+      phone: "3841238745",
+      title: "Director of Engineering",
+      
+    });
+  });
+
+    it("can not save exiting edited employee when navgate with out save", async () => {
       await em.selectEmployeeByName("Teresa Osborne");
       await em.editEmployee({ title: "Manager" });
-      await em.saveChanges();
       await em.selectEmployeeByName("Phillip Weaver");
       await em.selectEmployeeByName("Teresa Osborne");
       let employee = await em.getEmployeeInfo();
       expect(employee).toEqual({
-        id: -1,
+        id: 4,
         name: "Teresa Osborne",
-        phone: "4824931093",
-        title: "Manager",
+        phone: "3841238745",
+        title: "Director of Engineering",
         
-    });
-    expect(employee.title).toEqual("Manager");
-    expect(employee.name).toEqual("Teresa osbonrne");
-    expect(employee.phone).toEqual("4824931093");
-  });
+      });
+   });
   it("can add a new employee Neba", async () => {
     await em.addEmployee();
     await em.selectEmployeeByName("New Employee");
@@ -71,22 +83,11 @@ describe("Employee Manager", () => {
     await em.selectEmployeeByName("Phillip Weaver");
     await em.selectEmployeeByName("Neba");
     let employee = await em.getEmployeeInfo();
-    //expect(employee).toEqual({
-      expect(employee.name).toEqual("Neba");
-      expect(employee.phone).toEqual("1234567891");
-      expect(employee.title).toEqual("Developer");
+    expect(employee.name).toEqual("Neba");
+    expect(employee.phone).toEqual("1234567891");
+    expect(employee.title).toEqual("Developer");
   });
 
-  //it("", () => {
-
-
-
-
-
-
-
-
-
-  });
+});
 
   
